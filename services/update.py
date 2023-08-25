@@ -12,7 +12,7 @@ class TransactionHistory():
         transaction = {
             "transaction_type": transaction_type,
             "amount": amount,
-            "created at": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            "created_at": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         self.transactions.append(transaction)
 

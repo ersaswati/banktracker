@@ -71,6 +71,7 @@ class InsertModule:
 
         print("User added successfully!")
 
+    @staticmethod
     def create_account_2(data_file_path):
         name = input("Enter your full name: ")
         account_number = str(random.randint(1000000000, 9999999999))
@@ -86,7 +87,7 @@ class InsertModule:
             if InsertModule.is_valid_pincode(pincode):
                 break
             print(
-                "Pincode should be exactly 5 digits long and consist of digits only. Please re-enter.")
+                "Pincode should consist of digits only. Please re-enter.")
         email = input("Enter your e-mail ID: ")
         email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_pattern, email):

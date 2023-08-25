@@ -71,7 +71,7 @@ class MainBankSystem:
                     "Create New Account", interaction_log, user_data=user_input_details)
 
             elif choice == 'View User Details':
-                interaction_log, user_input_details = get_module.view_user_details_2(
+                interaction_log, user_input_details, dummy = get_module.view_user_details_2(
                     self.data_file_path)
                 self.log_interaction(
                     "View User Details", interaction_log, user_data=user_input_details)
