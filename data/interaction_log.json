@@ -1,0 +1,51 @@
+[
+    {
+        "user_input": "Create New Account",
+        "interaction_log": {
+            "Enter your full name:": "Anuj Shah",
+            "Enter your phone number:": "7021060350",
+            "Enter your pincode:": "400006",
+            "Enter your e-mail ID:": "anuj.shah@nyu.edu",
+            "Enter your address:": "27 Meera Building",
+            "Enter your bank_name:": "Union Bank",
+            "Enter your IFSC code:": "12345",
+            "Enter your account_type:": "Savings"
+        }
+    },
+    {
+        "user_input": "View User Details",
+        "interaction_log": {
+            "Enter your account number:": "9463461504"
+        }
+    },
+    {
+        "user_input": "View User Details",
+        "interaction_log": {
+            "Enter your account name:": "Anuj Shah"
+        }
+    },
+    {
+        "user_input": "View User Details",
+        "interaction_log": {
+            "Enter your phone number:": "7021060350"
+        }
+    },
+    {
+        "user_input": "Update User Details",
+        "interaction_log": {
+            "Enter the account number you want to update:": "9463461504",
+            "What do you want to do?": "Quit",
+            "What do you want to update?": "Quit",
+            "Enter the new email:": "0anujshah1@gmail.com",
+            "Enter the amount to deposit:": 500.0,
+            "Enter the amount to withdraw:": 100.0
+        }
+    },
+    {
+        "user_input": "Delete User",
+        "interaction_log": {
+            "Enter Account Number of User You Want To Delete:": "9463461504",
+            "Are you sure you want to delete?": "No"
+        }
+    }
+]

@@ -1,5 +1,6 @@
 import json
 import easygui
+import questionary
 
 
 class GetModule:
@@ -41,7 +42,7 @@ class GetModule:
             print("User not found")
 
     @staticmethod
-    def view_user_details_2(data_file_path):
+    def view_user_details_gui(data_file_path):
         choices = ["Account Number", "Account Name", "Phone Number"]
         search_option = easygui.buttonbox(
             "How would you like to access your account?", choices=choices)
@@ -192,3 +193,83 @@ class GetModule:
                 print("User not found")
 
             return interaction_log, user_input_details, found_user_redux
+
+    @staticmethod
+    def view_user_details_questionary(data_file_path):
+        choices = ["Account Number", "Account Name", "Phone Number"]
+        search_option = questionary.select(
+            "How would you like to access your account?", choices=choices).ask()
+
+        with open(data_file_path) as json_file:
+            data = json.load(json_file)
+
+        if search_option == "Account Number":
+
+            account_number = input("Enter your account number: ")
+
+            interaction_log = {
+                "Enter your account number:": account_number
+            }
+
+            found_user = None
+
+            for user_data in data:
+                if user_data['account_number'] == account_number and user_data['is_active']:
+                    found_user = user_data
+                    break
+
+            if found_user:
+                user_output = found_user
+                found_user_redux = found_user['account_name']
+
+            else:
+                user_output = "User not found"
+
+            return interaction_log, user_output, found_user_redux
+
+        elif search_option == "Account Name":
+
+            account_name = input("Enter your account name: ")
+
+            interaction_log = {
+                "Enter your account name:": account_name
+            }
+
+            found_user = []
+
+            for user_data in data:
+                if user_data['account_name'] == account_name and user_data['is_active']:
+                    found_user.append(user_data)
+
+            if found_user:
+                user_output = found_user
+                for user in found_user:
+                    found_user_redux = user['account_name']
+
+            else:
+                user_output = print("User not found")
+
+            return interaction_log, found_user, found_user_redux
+
+        elif search_option == "Phone Number":
+            phone_number = input("Enter your phone number: ")
+
+            interaction_log = {
+                "Enter your phone number:": phone_number
+            }
+
+            found_user = []
+
+            for user_data in data:
+                if user_data['phone_number'] == phone_number and user_data['is_active']:
+                    found_user.append(user_data)
+
+            if found_user:
+                user_output = found_user
+                for user in found_user:
+                    found_user_redux = user['account_name']
+
+            else:
+                user_output = print("User not found")
+
+            return interaction_log, user_output, found_user_redux

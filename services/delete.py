@@ -1,5 +1,6 @@
 import json
 import easygui
+import questionary
 
 
 class DeleteModule:
@@ -31,7 +32,7 @@ class DeleteModule:
             print("user not found")
 
     @staticmethod
-    def delete_user_2(data_file_path):
+    def delete_user_gui(data_file_path):
         account_number = input(
             "Enter Account Number of User You Want To Delete: ")
 
@@ -70,3 +71,39 @@ class DeleteModule:
         }
 
         return interaction_log, user_input_details
+
+    @staticmethod
+    def delete_user_questionary(data_file_path):
+        account_number = input(
+            "Enter Account Number of User You Want To Delete: ")
+
+        with open(data_file_path) as json_file:
+            data = json.load(json_file)
+
+        found_user_data = None
+        for user_data in data:
+            if user_data['account_number'] == account_number:
+                found_user_data = user_data
+                break
+
+        if found_user_data:
+            choices = ["Yes", "No"]
+            confirm = questionary.select(
+                "Are you sure you want to delete?", choices=choices).ask()
+
+            if confirm == 'Yes':
+                found_user_data['is_active'] = False
+                with open(data_file_path, 'w') as json_file:
+                    json.dump(data, json_file, indent=4)
+                print("Deleted Successfully!!")
+            else:
+                print("Data not deleted")
+        else:
+            print("user not found")
+
+        interaction_log = {
+            "Enter Account Number of User You Want To Delete:": account_number,
+            "Are you sure you want to delete?": confirm
+        }
+
+        return interaction_log

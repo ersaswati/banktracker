@@ -1,6 +1,7 @@
 import json
 import datetime
 import easygui
+import questionary
 
 
 class TransactionHistory():
@@ -128,7 +129,7 @@ class UpdateModule:
             print("User not found")
 
     @staticmethod
-    def update_user_details_2(data_file_path):
+    def update_user_details_gui(data_file_path):
         account_number = input("Enter the account number you want to update: ")
 
         interaction_log = {
@@ -276,3 +277,140 @@ class UpdateModule:
             print("User not found")
 
         return interaction_log, user_input_details
+
+    @staticmethod
+    def update_user_details_questionary(data_file_path):
+        account_number = input("Enter the account number you want to update: ")
+
+        interaction_log = {
+            "Enter the account number you want to update:": account_number
+        }
+
+        with open(data_file_path) as json_file:
+            data = json.load(json_file)
+
+        found_user_data = None
+        for user_data in data:
+            if user_data['account_number'] == account_number:
+                if user_data['is_active']:
+                    found_user_data = user_data
+                    break
+
+        if found_user_data is not None:
+            while True:
+                update_choices = ["Update User Details",
+                                  "Withdraw Money", "Deposit Money", "Quit"]
+                update_choice = questionary.select(
+                    "What do you want to do?", choices=update_choices).ask()
+
+                interaction_log["What do you want to do?"] = update_choice
+
+                if update_choice == 'Update User Details':
+                    while True:
+                        update_choices_2 = [
+                            "Name", "Email", "Address", "Pincode", "Phone Number", "Quit"]
+                        update_choice_2 = questionary.select(
+                            "What do you want to update?", choices=update_choices_2).ask()
+
+                        interaction_log["What do you want to update?"] = update_choice_2
+
+                        if update_choice_2 == 'Name':
+                            name = input("Enter the new name:")
+                            found_user_data['account_name'] = name
+
+                            interaction_log["Enter the new name:"] = name
+
+                        elif update_choice_2 == 'Email':
+                            email = input(
+                                "Enter the new email: ")
+                            found_user_data['email'] = email
+
+                            interaction_log["Enter the new email:"] = email
+
+                        elif update_choice_2 == 'Address':
+                            address = input(
+                                "Enter the new address:")
+                            found_user_data['address'] = address
+
+                            interaction_log["Enter the new address:"] = address
+
+                        elif update_choice_2 == 'Pincode':
+                            pincode = input(
+                                "Enter the new pincode:")
+                            found_user_data['pincode'] = pincode
+
+                            interaction_log["Enter the new pincode:"] = pincode
+
+                        elif update_choice_2 == 'Phone Number':
+                            phone_number = input(
+                                "Enter the new phone number:")
+                            found_user_data['phone_number'] = phone_number
+
+                            interaction_log["Enter the new phone number:"] = phone_number
+
+                        elif update_choice_2 == 'Quit':
+                            updated_at = datetime.datetime.now()
+                            found_user_data['updated_at'] = updated_at.strftime(
+                                '%Y-%m-%d %H:%M:%S')
+                            with open(data_file_path, 'w') as json_file:
+                                json.dump(data, json_file, indent=4)
+
+                            break
+
+                elif update_choice == 'Withdraw Money':
+                    withdrawal_amount = float(
+                        input("Enter the amount to withdraw: "))
+
+                    interaction_log["Enter the amount to withdraw:"] = withdrawal_amount
+
+                    if withdrawal_amount <= found_user_data['total_amount']:
+                        found_user_data['total_amount'] -= withdrawal_amount
+                        transaction_history = TransactionHistory(
+                            account_number)
+                        transaction_history.add_transaction(
+                            "Withdrawal", withdrawal_amount)
+                        if 'transaction_history' in found_user_data:
+                            found_user_data['transaction_history'].extend(
+                                transaction_history.transactions)
+                        else:
+                            found_user_data['transaction_history'] = transaction_history.transactions
+                        updated_at = datetime.datetime.now()
+                        found_user_data['updated_at'] = updated_at.strftime(
+                            '%Y-%m-%d %H:%M:%S')
+                        with open(data_file_path, 'w') as json_file:
+                            json.dump(data, json_file, indent=4)
+                        print("Withdrawal successful, Total amount:",
+                              found_user_data['total_amount'])
+                    else:
+                        print("Insufficient balance!")
+
+                elif update_choice == 'Deposit Money':
+                    deposit_amount = float(
+                        input("Enter the amount to deposit: "))
+
+                    interaction_log["Enter the amount to deposit:"] = deposit_amount
+
+                    found_user_data['total_amount'] += deposit_amount
+                    transaction_history = TransactionHistory(account_number)
+                    transaction_history.add_transaction(
+                        "Deposit", deposit_amount)
+                    if 'transaction_history' in found_user_data:
+                        found_user_data['transaction_history'].extend(
+                            transaction_history.transactions)
+                    else:
+                        found_user_data['transaction_history'] = transaction_history.transactions
+                    updated_at = datetime.datetime.now()
+                    found_user_data['updated_at'] = updated_at.strftime(
+                        '%Y-%m-%d %H:%M:%S')
+                    with open(data_file_path, 'w') as json_file:
+                        json.dump(data, json_file, indent=4)
+                    print("Deposit successful. Total amount:",
+                          found_user_data['total_amount'])
+
+                elif update_choice == 'Quit':
+                    break
+
+        else:
+            print("User not found")
+
+        return interaction_log
