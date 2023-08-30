@@ -1,5 +1,5 @@
-/data.json
-/interaction_log.json
+data/data.json
+data/interaction_log.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
